@@ -3,15 +3,15 @@ package org.example;
 import java.util.*;
 
 public class FAConverter {
-    static class State {
+    public static class State {
         String name;
-        Map<Character, Set<State>> transitions = new HashMap<>();
+        public Map<Character, Set<State>> transitions = new HashMap<>();
 
         public State(String name) {
             this.name = name;
         }
 
-        void addTransition(char symbol, State state) {
+        public void addTransition(char symbol, State state) {
             transitions.computeIfAbsent(symbol, k -> new HashSet<>()).add(state);
         }
 
