@@ -66,7 +66,7 @@ public class FAConverter implements IFAConverter {
             }
         }
         // Example lacks explicit final state handling, so adding manually
-        System.out.println("q1 -> λ"); // Assuming q1 is a final state for demonstration
+         System.out.println("q2 -> λ"); // Assuming q1 is a final state for demonstration
     }
 
     public static void determineFA(List<State> states) {

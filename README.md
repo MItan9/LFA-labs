@@ -136,8 +136,12 @@ public static void main(String[] args) {
     // CLI for selecting options
 }
 ```
-![Image](https://github.com/MItan9/LFA-labs/blob/main/NFA.png)
-![Image](https://github.com/MItan9/LFA-labs/blob/main/NFA%20to%20DFA.png)
+![Image](NFA.png)
+![Image](NFA%20to%20DFA.png)
+
+In this example, the program defines a simple NDFA with three states and transitions. It then provides a CLI for selecting the desired operation, such as converting the NDFA to a DFA, determining the type of FA, or converting the FA to a regular grammar.
+
+
 
 
 ## Conclusion 
