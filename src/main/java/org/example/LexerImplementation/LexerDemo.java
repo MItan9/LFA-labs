@@ -3,21 +3,26 @@ package org.example.LexerImplementation;
 import java.util.List;
 import java.util.Scanner;
 
-// Main class to demonstrate the lexer
+// Основной класс для демонстрации работы лексера
 public class LexerDemo {
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter an arithmetic expression:");
-        String input = scanner.nextLine(); // Read user input from console
+        // Считывание строки (арифметического выражения) введённой пользователем
+        String input = scanner.nextLine();
 
-        Lexer lexer = new Lexer(input); // Initialize lexer with the input
-        List<Token> tokens = lexer.tokenize(); // Tokenize the input
+        // Инициализация лексера с введённым пользователем текстом
+        Lexer lexer = new Lexer(input);
+        // Токенизация ввода - преобразование введённого текста в список токенов
+        List<Token> tokens = lexer.tokenize();
 
-        // Iterate over tokens and print them
+        // Перебор полученных токенов и их вывод в консоль
         for (Token token : tokens) {
             System.out.println(token);
         }
 
-        scanner.close(); // Close the scanner to prevent resource leak
+        // Закрытие сканера для предотвращения утечки ресурсов
+        scanner.close();
     }
 }
