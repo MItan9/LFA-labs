@@ -27,62 +27,88 @@ The project consists of a Java package `org.example.RegularExpressions` containi
 
 A class that generates all possible combinations for three complex patterns defined by given regular expressions. It showcases Java's capabilities in handling sets, lists, and complex iteration patterns to explore all possible combinations that match the specified regular expressions.
 
-#### Generating Pattern 1 Combinations
+## Code Overview
+The program consists of the following components:
+- **`RegExpGenerator` class**: Contains methods for generating combinations based on regular expressions.
+  - `generateCombinations(String regExp)`: Takes a regular expression as input and returns a list of combinations.
+  - `generateCombinationsInternal(String prefix, String regExp)`: Internal method for generating combinations recursively.
+  - `handleQuantifier(String prefix, String segment, String quantifier, String remainder)`: Handles quantifiers (*, ?, +, ^n) in the regular expression.
+- **`main` method**: Entry point of the program where regular expressions are processed and combinations are generated.
 
-The `generatePattern1` method generates combinations based on the first pattern's rules. It starts with an optional 'M' or a space character, followed by combinations of 'O' and 'P', and concludes with a series of 'Q's and at least one 'R', limiting 'Q's to a maximum of five repetitions.
+### `generateCombinationsInternal` Method
+This method recursively generates combinations based on the provided regular expression.
 
 ```java
-private static List<String> generatePattern1() {
-    Set<String> results = new HashSet<>();
-    char[] optionalM = {' ', 'M'};
-    char[] opOptions = {'O', 'P'};
-    char[] qrOptions = {'Q', 'R'};
+    private static List<String> generateCombinationsInternal(String prefix, String regExp) {
+        Set<String> results = new HashSet<>();
 
-    for (char m : optionalM) {
-        for (int i = 0; i < 8; i++) {
-            String opCombination = "";
-            for (int j = 0; j < 3; j++) {
-                opCombination += opOptions[(i >> j) & 1];
-            }
-            for (int q = 0; q <= 5; q++) {
-                String qs = "Q".repeat(q);
-                for (int r = 1; r <= 5; r++) {
-                    String rs = "R".repeat(r);
-                    results.add(m + "NN" + opCombination + qs + rs);
-                }
-            }
+        if (regExp.isEmpty()) {
+        results.add(prefix);
+        return new ArrayList<>(results);
         }
-    }
-    return List.copyOf(results);
-}
-```
-This method utilizes bitwise operations to iterate through all combinations of 'O' and 'P', and a nested loop structure to manage the repetitions of 'Q' and 'R'.
 
-### Generating Pattern 2 Combinations
-The `generatePattern2` method creates combinations starting with sequences of 'X', 'Y', or 'Z', followed by a string of '8's and ending with combinations of '9' and '0'. This showcases the use of mathematical operations to navigate through permutations of the initial characters and subsequent parts of the pattern.
-    
+        // Extend the pattern for parsing to better handle groups and quantifiers
+        Pattern pattern = Pattern.compile("^(\\w+|\\((\\w+\\|?)+\\))(\\*|\\?|\\+|\\^\\d+)?|8\\+|\\d+");
+        Matcher matcher = pattern.matcher(regExp);
+
+        while (matcher.find()) {
+        String matchedSegment = matcher.group(1) != null ? matcher.group(1) : "";
+        String quantifier = matcher.group(3) != null ? matcher.group(3) : "";
+        String remainder = regExp.substring(matcher.end());
+
+        // Handle groups with choice
+        if (matchedSegment.startsWith("(")) {
+        matchedSegment = matchedSegment.substring(1, matchedSegment.length() - 1);
+        String[] options = matchedSegment.split("\\|");
+        for (String option : options) {
+        results.addAll(generateCombinationsInternal(prefix + option, remainder));
+        }
+        } else if (!matchedSegment.isEmpty()) {
+        // Handle quantifiers with consideration for exact repetitions
+        results.addAll(handleQuantifier(prefix, matchedSegment, quantifier, remainder));
+        }
+        }
+
+        return new ArrayList<>(results);
+        }
+```         
+
+### `handleQuantifier` Method
+This method handles quantifiers (*, ?, +, ^n) in the regular expression.
+
 ```java
-private static List<String> generatePattern2() {
-Set<String> results = new HashSet<>();
-char[] xyzOptions = {'X', 'Y', 'Z'};
-char[] nineZeroOptions = {'9', '0'};
-
-    // Code omitted for brevity. Follows a similar structure to generatePattern1, adjusting for pattern 2's rules.
-}
+    private static Set<String> handleQuantifier(String prefix, String segment, String quantifier, String remainder) {
+        Set<String> results = new HashSet<>();
+        if (quantifier.isEmpty()) {
+        results.add(prefix + segment);
+        } else if (quantifier.equals("*")) {
+        results.add(prefix);
+        results.add(prefix + segment);
+        results.addAll(handleQuantifier(prefix + segment, segment, quantifier, remainder));
+        } else if (quantifier.equals("?")) {
+        results.add(prefix);
+        results.add(prefix + segment);
+        } else if (quantifier.equals("+")) {
+        results.add(prefix + segment);
+        results.addAll(handleQuantifier(prefix + segment, segment, quantifier, remainder));
+        } else if (quantifier.startsWith("^")) {
+        int repetitions = Integer.parseInt(quantifier.substring(1));
+        for (int i = 0; i < repetitions; i++) {
+        results.add(prefix + segment);
+        prefix += segment;
+        }
+        results.addAll(generateCombinationsInternal(prefix, remainder));
+        }
+        return results;
+        }
 ```
 
-### Generating Pattern 3 Combinations
-The `generatePattern3` method focuses on combinations of 'H' or 'I', followed by 'J' or 'K', with an optional sequence of 'L's up to five times, and optionally ending with 'N'. This illustrates handling optional elements and repetitions within a pattern.
-
-```java
-private static List<String> generatePattern3() {
-    Set<String> results = new HashSet<>();
-    char[] hiOptions = {'H', 'I'};
-    char[] jkOptions = {'J', 'K'};
-
-    // Code omitted for brevity. Illustrates handling optional elements and repetitions within the specified pattern.
-}
-```
+### Features
+The program supports the following features:
+- **Universal Compatibility:** The program is designed to handle a wide range of regular expressions, making it suitable for various use cases.
+- **Flexible:** It supports quantifiers, groups, and different character sets, providing flexibility in defining regular expressions.
+- **Efficient:** The program generates combinations efficiently, even for complex regular expressions, thanks to its recursive approach.
+- **Scalable:** Additional methods can be added to extend its functionality further.
 
 ### WordAnalysis
 

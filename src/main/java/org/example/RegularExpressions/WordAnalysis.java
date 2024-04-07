@@ -79,8 +79,8 @@ public class WordAnalysis {
 
     public static void main(String[] args) {
         // Examples of analyzing different words according to the predefined grammars
-        analyzeAndDescribe("NNPPOQQRRRR");
-        analyzeAndDescribe("ZXY888809");
+        analyzeAndDescribe("NNPOPQQRRR");
+        analyzeAndDescribe("YYY8888890");
         analyzeAndDescribe("HK");
     }
 }
