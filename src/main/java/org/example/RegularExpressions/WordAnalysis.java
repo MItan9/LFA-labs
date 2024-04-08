@@ -81,6 +81,6 @@ public class WordAnalysis {
         // Examples of analyzing different words according to the predefined grammars
         analyzeAndDescribe("NNPOPQQRRR");
         analyzeAndDescribe("YYY8888890");
-        analyzeAndDescribe("HK");
+        analyzeAndDescribe("PIHGBJ");
     }
 }

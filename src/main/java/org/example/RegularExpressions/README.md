@@ -8,6 +8,25 @@ This Java program is part of the coursework for "Formal Languages & Finite Autom
 - **Course:** Formal Languages & Finite Automata
 - **Authors:** Cretu Dumitru and kudos to Vasile Drumea with Irina Cojuhari
 
+*Regular expressions* (regex) are a powerful tool for matching patterns within text. They use a specialized syntax to define a search pattern, making it possible to perform complex text searches, replacements, and parsing tasks that would be cumbersome or impossible with standard string methods alone. Regular expressions are used in programming languages, text editors, command-line utilities, and more, due to their versatility and efficiency in handling text-based data.
+
+The essence of regex lies in its language, composed of literals, meta-characters, character classes, quantifiers, anchors, and groups. Each element plays a specific role, from representing individual characters to defining broad sets of characters, and from specifying the occurrence of patterns to marking positions within the text. Such a rich syntax enables regex to perform intricate text searches, replacements, and parsing operations that would otherwise be cumbersome or outright impossible with traditional string methods.
+
+Regular expressions are employed across a diverse spectrum of tasks. They excel in searching and matching operations, where they can quickly locate specific patterns within text, such as email addresses, phone numbers, or custom identifiers. In the realm of data validation, regex ensures that inputs or data adhere to predefined formats, a critical aspect of maintaining data integrity and security. Furthermore, regex facilitates advanced text manipulation, enabling users to conduct complex replacements or deletions based on pattern matches. It also serves as a powerful tool for parsing and extracting information from logs, documents, and other text sources, transforming unstructured or semi-structured data into structured formats. Additionally, regex is utilized in syntax highlighting within text editors and IDEs, distinguishing and styling different parts of code according to language syntax rules.
+
+**Benefits:**
+
+- *Efficiency:* Allows for the processing of large texts quickly.
+- *Versatility:* Applicable to virtually any programming language and many tools.
+- *Precision:* Can match very specific patterns that are difficult to define with standard string methods.
+
+**Limitations:**
+
+- *Complexity:* Regex patterns can become difficult to read and maintain, especially for complex patterns.
+- *Performance:* Inefficient regex patterns can be slow and resource-intensive on large texts.
+- *Learning Curve:* Requires time to learn and master the syntax and nuances of regular expressions.
+
+
 ## Objectives
 
 The primary objectives of this project are to:
@@ -51,23 +70,7 @@ This method recursively generates combinations based on the provided regular exp
         Pattern pattern = Pattern.compile("^(\\w+|\\((\\w+\\|?)+\\))(\\*|\\?|\\+|\\^\\d+)?|8\\+|\\d+");
         Matcher matcher = pattern.matcher(regExp);
 
-        while (matcher.find()) {
-        String matchedSegment = matcher.group(1) != null ? matcher.group(1) : "";
-        String quantifier = matcher.group(3) != null ? matcher.group(3) : "";
-        String remainder = regExp.substring(matcher.end());
-
-        // Handle groups with choice
-        if (matchedSegment.startsWith("(")) {
-        matchedSegment = matchedSegment.substring(1, matchedSegment.length() - 1);
-        String[] options = matchedSegment.split("\\|");
-        for (String option : options) {
-        results.addAll(generateCombinationsInternal(prefix + option, remainder));
-        }
-        } else if (!matchedSegment.isEmpty()) {
-        // Handle quantifiers with consideration for exact repetitions
-        results.addAll(handleQuantifier(prefix, matchedSegment, quantifier, remainder));
-        }
-        }
+        ...
 
         return new ArrayList<>(results);
         }
@@ -88,17 +91,7 @@ This method handles quantifiers (*, ?, +, ^n) in the regular expression.
         } else if (quantifier.equals("?")) {
         results.add(prefix);
         results.add(prefix + segment);
-        } else if (quantifier.equals("+")) {
-        results.add(prefix + segment);
-        results.addAll(handleQuantifier(prefix + segment, segment, quantifier, remainder));
-        } else if (quantifier.startsWith("^")) {
-        int repetitions = Integer.parseInt(quantifier.substring(1));
-        for (int i = 0; i < repetitions; i++) {
-        results.add(prefix + segment);
-        prefix += segment;
-        }
-        results.addAll(generateCombinationsInternal(prefix, remainder));
-        }
+        ...
         return results;
         }
 ```
