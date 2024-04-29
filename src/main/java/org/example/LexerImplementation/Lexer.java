@@ -1,93 +1,56 @@
 package org.example.LexerImplementation;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.example.LexerImplementation.TokenType;
 
-// Класс Lexer для лексического анализа входного текста.
+/** Lexer for the language. */
 public class Lexer {
-    private final String input; // Входная строка для анализа
-    private int position = 0; // Текущая позиция во входной строке
-    private char currentChar; // Текущий символ на текущей позиции
 
-    // Конструктор класса Lexer. Принимает входную строку для анализа.
+    private final List<Token> tokens = new ArrayList<>();
+    private static final Pattern tokenPatterns = Pattern.compile(
+            "\\b(if|else)\\b|\\b\\d+\\.?\\d*|\\b[a-zA-Z][a-zA-Z0-9_]*|==|=|;|\\*|/|\\(|\\)|\\{|\\}"
+    );
+    private final Matcher matcher;
+
     public Lexer(String input) {
-        this.input = input + "\0"; // Добавление символа конца файла (EOF) к входной строке
-        currentChar = this.input.charAt(position); // Получение текущего символа
+        this.matcher = tokenPatterns.matcher(input);
     }
 
-    // Метод для продвижения позиции на один символ вперёд.
-    private void advance() {
-        position++;
-        if (position > input.length() - 1) {
-            currentChar = '\0'; // Если достигнут конец строки, установка символа EOF
-        } else {
-            currentChar = input.charAt(position); // Обновление текущего символа
-        }
-    }
-
-    // Метод для пропуска пробельных символов.
-    private void skipWhitespace() {
-        while (currentChar != '\0' && Character.isWhitespace(currentChar)) {
-            advance(); // Продвижение позиции до тех пор, пока не будет найден не пробельный символ
-        }
-    }
-
-    // Метод для получения следующего токена из входной строки.
-    public Token getNextToken() {
-        while (currentChar != '\0') { // Пока не достигнут конец строки
-            if (Character.isWhitespace(currentChar)) {
-                skipWhitespace();
-                continue; // Продолжение сканирования после пропуска пробелов
-            }
-
-            if (Character.isDigit(currentChar)) { // Если текущий символ - цифра
-                StringBuilder value = new StringBuilder();
-                while (Character.isDigit(currentChar)) { // Собираем все цифры в число
-                    value.append(currentChar);
-                    advance();
-                }
-                return new Token(TokenType.INTEGER, value.toString()); // Возвращаем токен целого числа
-            }
-
-            // Проверки на операторы и возврат соответствующих токенов
-            if (currentChar == '+') {
-                advance();
-                return new Token(TokenType.PLUS, "+");
-            }
-
-            if (currentChar == '-') {
-                advance();
-                return new Token(TokenType.MINUS, "-");
-            }
-
-            if (currentChar == '*') {
-                advance();
-                return new Token(TokenType.MULTIPLY, "*");
-            }
-
-            if (currentChar == '/') {
-                advance();
-                return new Token(TokenType.DIVIDE, "/");
-            }
-
-            if (currentChar == '=') {
-                advance();
-                return new Token(TokenType.EQUALS, "=");
-            }
-        }
-
-        return new Token(TokenType.EOF, null); // Возврат токена конца файла при достижении конца строки
-    }
-
-    // Метод для токенизации всей входной строки.
+    /** Tokenizes the input string. */
     public List<Token> tokenize() {
-        List<Token> tokens = new ArrayList<>(); // Список для хранения токенов
-        Token token = getNextToken();
-        while (token.type != TokenType.EOF) { // Пока не достигнут конец файла
-            tokens.add(token); // Добавление токена в список
-            token = getNextToken(); // Получение следующего токена
+        while (matcher.find()) {
+            if (matcher.group().equals("if")) {
+                tokens.add(new Token(TokenType.IF, matcher.group()));
+            } else if (matcher.group().equals("else")) {
+                tokens.add(new Token(TokenType.ELSE, matcher.group()));
+            } else if (matcher.group().matches("\\d+\\.?\\d*")) {
+                tokens.add(new Token(TokenType.NUMBER, matcher.group()));
+            } else if (matcher.group().matches("[a-zA-Z][a-zA-Z0-9_]*")) {
+                tokens.add(new Token(TokenType.IDENTIFIER, matcher.group()));
+            } else if (matcher.group().equals("==")) {
+                tokens.add(new Token(TokenType.EQUALS, matcher.group()));
+            } else if (matcher.group().equals("=")) {
+                tokens.add(new Token(TokenType.ASSIGN, matcher.group()));
+            } else if (matcher.group().equals(";")) {
+                tokens.add(new Token(TokenType.SEMICOLON, matcher.group()));
+            } else if (matcher.group().equals("*")) {
+                tokens.add(new Token(TokenType.MULTIPLY, matcher.group()));
+            } else if (matcher.group().equals("/")) {
+                tokens.add(new Token(TokenType.DIVIDE, matcher.group()));
+            } else if (matcher.group().equals("(")) {
+                tokens.add(new Token(TokenType.LPAREN, matcher.group()));
+            } else if (matcher.group().equals(")")) {
+                tokens.add(new Token(TokenType.RPAREN, matcher.group()));
+            } else if (matcher.group().equals("{")) {
+                tokens.add(new Token(TokenType.LBRACE, matcher.group()));
+            } else if (matcher.group().equals("}")) {
+                tokens.add(new Token(TokenType.RBRACE, matcher.group()));
+            }
         }
-        tokens.add(token); // Добавление токена EOF в список
-        return tokens; // Возвращение списка токенов
+        return tokens;
     }
 }

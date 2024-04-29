@@ -1,21 +1,26 @@
 package org.example.LexerImplementation;
+//import org.example.LexerImplementation.TokenType;
 
-// Класс Token представляет собой токен, полученный в результате лексического анализа.
+/** Represents a token. */
 public class Token {
-    TokenType type; // Тип токена, определяющий его роль в анализируемом тексте.
-    String value; // Строковое значение токена, содержащее фактические данные.
+    private final TokenType type;
+    private final String text;
 
-    // Конструктор класса, инициализирующий новый токен с заданными типом и значением.
-    public Token(TokenType type, String value) {
+    public Token(TokenType type, String text) {
         this.type = type;
-        this.value = value;
+        this.text = text;
     }
 
-    // Переопределение метода toString() для возвращения строки, представляющей токен.
-    // Это упрощает вывод токена на экран или его логирование.
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getText() {
+        return text;
+    }
+
     @Override
     public String toString() {
-        // Форматирует строку таким образом, что она содержит тип и значение токена.
-        return String.format("Type: %s, Value: '%s'", type, value);
+        return type + ": '" + text + "'";
     }
 }

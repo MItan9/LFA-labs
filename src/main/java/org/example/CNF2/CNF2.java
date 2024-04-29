@@ -99,7 +99,7 @@ public class CNF2 {
 
     public void eliminateThreeTerminal() {
 
-        System.out.println("Replace two terminal variable with new variable ... ");
+        System.out.println("Chomsky Normal Form ... ");
 
         for (int i = 0; i < lineCount; i++) {
             removeThreeTerminal();
@@ -324,7 +324,7 @@ public class CNF2 {
 
     public void onlyTwoTerminalandOneVariable() {
 
-        System.out.println("Assign new variable for two non-terminal or one terminal ... ");
+        System.out.println("What and for what can be replaced in Chomsky Normal Form ... ");
 
         Iterator itr5 = mapVariableProduction.entrySet().iterator();
         String key = null;
